@@ -41,6 +41,36 @@ module ScmacrosRepositoryInclude
 
   Redmine::WikiFormatting::Macros.register do
     desc "Includes and formats a file from repository.\n\n" +
+      " \{{repo_includecode(file_path, language, rev)}}\n"
+    macro :repo_includecode do |obj, args|
+      return nil if args.length < 1
+      file_path = args[0].strip
+      rev ||= args[2].strip if args.length > 2
+
+      language ||= args[1].strip if args.length > 1
+
+      repo = @project.repository
+      return nil unless repo
+
+      text = repo.cat(file_path, rev)
+      text = Redmine::CodesetUtil.to_utf8_by_setting(text)
+
+      if Redmine::SyntaxHighlighting.language_supported?(language)
+        o = "<pre><code class=\"#{language} syntaxhl\">" +
+          Redmine::SyntaxHighlighting.highlight_by_language(text, language) +
+          "</code></pre>"
+      else
+        o = "<pre><code>#{ERB::Util.h(text)}</code></pre>"
+      end
+
+      o = o.html_safe
+      return o
+    end
+
+  end
+
+  Redmine::WikiFormatting::Macros.register do
+    desc "Includes and formats a file from repository.\n\n" +
       " \{{repo_includewiki(file_path)}}\n"
     macro :repo_includewiki do |obj, args|
       
