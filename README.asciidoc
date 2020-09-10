@@ -58,7 +58,7 @@ To include a repository file and format it:
 
 {{repo_includecode(file_path, language, revision)}} <4>
 
-{{repo_include_repo_code(repositoryidentifier, file_path, language, revision)}} <5>
+{{repo_include_repo_code(projectidentifier, repositoryidentifier, file_path, language, revision)}} <5>
 -------------------------------
 
 <1> +file_path+ is the file to include.

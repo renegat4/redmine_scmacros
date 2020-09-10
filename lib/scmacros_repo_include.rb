@@ -72,16 +72,18 @@ module ScmacrosRepositoryInclude
 
   Redmine::WikiFormatting::Macros.register do
     desc "Includes and formats a file from other repository with syntax highlighting.\n\n" +
-      " \{{repo_include_repo_code(repositoryidentifier, file_path, language, rev)}}\n"
+      " \{{repo_include_repo_code(projectidentifier, repositoryidentifier, file_path, language, rev)}}\n"
     macro :repo_include_repo_code do |obj, args|
-      #Rails::logger.info '-----------------------------------------------------'
-      #Rails::logger.info args.length
-      return nil if args.length < 3
+      return nil if args.length < 4
 
-      identifier = args[0].strip
-      file_path = args[1].strip
-      language ||= args[2].strip
-      rev ||= args[3].strip if args.length > 3
+      projident = args[0].strip
+      identifier = args[1].strip
+      file_path = args[2].strip
+      language ||= args[3].strip
+      rev ||= args[4].strip if args.length > 4
+
+      proj = Project.find_by_identifier(projident)
+      return nil unless proj
 
       repo = Repository::Git.find_by_identifier(identifier)
       return nil unless repo
