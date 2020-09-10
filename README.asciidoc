@@ -57,6 +57,8 @@ To include a repository file and format it:
 {{repo_includemd(file_path)}} <3>
 
 {{repo_includecode(file_path, language, revision)}} <4>
+
+{{repo_include_repo_code(repositoryidentifier, file_path, language, revision)}} <5>
 -------------------------------
 
 <1> +file_path+ is the file to include.
@@ -66,6 +68,8 @@ To include a repository file and format it:
 <3> Format the file as Markdown.
 
 <4> Syntax highlighting
+
+<5> like <4> but include file from other repository
 
 TODO
 ----
