@@ -40,7 +40,7 @@ module ScmacrosRepositoryInclude
   end
 
   Redmine::WikiFormatting::Macros.register do
-    desc "Includes and formats a file from repository.\n\n" +
+    desc "Includes and formats a file from repository with syntax highlighting.\n\n" +
       " \{{repo_includecode(file_path, language, rev)}}\n"
     macro :repo_includecode do |obj, args|
       return nil if args.length < 1
@@ -68,6 +68,41 @@ module ScmacrosRepositoryInclude
     end
 
   end
+
+
+  Redmine::WikiFormatting::Macros.register do
+    desc "Includes and formats a file from other repository with syntax highlighting.\n\n" +
+      " \{{repo_include_repo_code(repositoryidentifier, file_path, language, rev)}}\n"
+    macro :repo_include_repo_code do |obj, args|
+      #Rails::logger.info '-----------------------------------------------------'
+      #Rails::logger.info args.length
+      return nil if args.length < 3
+
+      identifier = args[0].strip
+      file_path = args[1].strip
+      language ||= args[2].strip
+      rev ||= args[3].strip if args.length > 3
+
+      repo = Repository::Git.find_by_identifier(identifier)
+      return nil unless repo
+
+      text = repo.cat(file_path, rev)
+      text = Redmine::CodesetUtil.to_utf8_by_setting(text)
+
+      if Redmine::SyntaxHighlighting.language_supported?(language)
+        o = "<pre><code class=\"#{language} syntaxhl\">" +
+          Redmine::SyntaxHighlighting.highlight_by_language(text, language) +
+          "</code></pre>"
+      else
+        o = "<pre><code>#{ERB::Util.h(text)}</code></pre>"
+      end
+
+      o = o.html_safe
+      return o
+    end
+
+  end
+
 
   Redmine::WikiFormatting::Macros.register do
     desc "Includes and formats a file from repository.\n\n" +
