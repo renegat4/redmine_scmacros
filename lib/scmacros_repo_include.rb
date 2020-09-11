@@ -82,9 +82,18 @@ module ScmacrosRepositoryInclude
       language ||= args[3].strip
       rev ||= args[4].strip if args.length > 4
 
+      Rails::logger.info '1 -------------------------------------------------'
+      Rails::logger.info User.current
+    
+
       proj = Project.find_by_identifier(projident)
       #return nil unless proj
+      return "Fehlende Rechte" unless User.current.allowed_to?(:view_changesets, proj)
       return "Projekt „#{projident}“ nicht gefunden." unless proj
+
+      #allowed = User.current.allowed_to?(q.class.view_permission, q.project, :global => true)
+      #Rails::logger.info '2 -------------------------------------------------'
+      #Rails::logger.info allowed
 
       repo = proj.repositories.find_by_identifier_param(identifier)
       return "Projekt „#{projident}“ hat kein Repository mit der Kennung „#{identifier}“." unless repo
