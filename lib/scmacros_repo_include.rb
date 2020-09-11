@@ -83,10 +83,11 @@ module ScmacrosRepositoryInclude
       rev ||= args[4].strip if args.length > 4
 
       proj = Project.find_by_identifier(projident)
-      return nil unless proj
+      #return nil unless proj
+      return "Projekt „#{projident}“ nicht gefunden." unless proj
 
-      repo = Repository::Git.find_by_identifier(identifier)
-      return nil unless repo
+      repo = proj.repositories.find_by_identifier_param(identifier)
+      return "Projekt „#{projident}“ hat kein Repository mit der Kennung „#{identifier}“." unless repo
 
       text = repo.cat(file_path, rev)
       text = Redmine::CodesetUtil.to_utf8_by_setting(text)

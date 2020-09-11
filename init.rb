@@ -27,7 +27,7 @@ Redmine::Plugin.register :redmine_scmacros do
   name 'Redmine Scmacros plugin'
   author 'Icer LIANG, Gregory ROMÉ, Mitsuhiro YOSHITANI, '
   description 'Add macros related to SCM (repository)'
-  version '0.0.5'
+  version '0.0.6'
   url 'https://github.com/renegat4/redmine_scmacros'
   author_url 'https://github.com/renegat4'
 end
